@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#030b0d">
+<meta name="description" content="高中生物必修1第3章：可交互的3D细胞内部模型。桌面版与手机版，在线直接打开。">
+<meta property="og:title" content="细胞内部漫游 · 3D 细胞探索">
+<meta property="og:description" content="高中生物必修1第3章：可交互的3D细胞内部模型，支持鼠标环绕与手机触控漫游。">
+<meta property="og:type" content="website">
+<title>细胞内部漫游 · 3D 细胞探索</title>
+<style>
+:root{
+  --bg:#030b0d;--panel:#071b1d;--line:rgba(137,255,232,.16);
+  --ink:#ebfffa;--muted:#96b9b3;--dim:#5f817c;
+  --mint:#6ff5d8;--teal:#2fd4bb;--violet:#b58cff;--amber:#ffc06a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink)}
+body{
+  font-family:"Segoe UI","PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(111,245,216,.25)}
+
+.bg{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none}
+.bg::before{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(900px 620px at 78% 18%,rgba(35,137,124,.22),transparent 66%),
+    radial-gradient(700px 520px at 8% 78%,rgba(93,58,160,.16),transparent 68%),
+    linear-gradient(145deg,#041315 0%,#030b0d 55%,#020708 100%);
+}
+.bg::after{
+  content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(128,255,231,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(128,255,231,.035) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse at 50% 35%,#000 10%,transparent 72%);
+  -webkit-mask-image:radial-gradient(ellipse at 50% 35%,#000 10%,transparent 72%);
+}
+.orb{position:absolute;border-radius:50%;filter:blur(2px);opacity:.55}
+.orb.a{width:420px;height:420px;right:-80px;top:-80px;border:1px solid rgba(93,255,226,.18);box-shadow:0 0 80px rgba(53,219,188,.08),inset 0 0 80px rgba(53,219,188,.05)}
+.orb.b{width:620px;height:620px;right:-200px;top:-170px;border:1px solid rgba(181,140,255,.1);transform:rotate(38deg) scaleY(.32)}
+.orb.c{width:300px;height:300px;left:-120px;bottom:-120px;border:1px solid rgba(111,245,216,.12);box-shadow:0 0 100px rgba(62,219,191,.08)}
+
+.wrap{width:min(1180px,calc(100% - 48px));margin:0 auto;position:relative;z-index:2}
+header{display:flex;align-items:center;justify-content:space-between;padding:28px 0 0;gap:20px}
+.brand{display:flex;align-items:center;gap:13px}
+.logo{width:42px;height:42px;border-radius:50%;position:relative;background:radial-gradient(circle at 34% 30%,#c4fff2 0 6%,#40d9bd 18%,#0b665e 52%,#031416 100%);box-shadow:0 0 22px rgba(73,238,204,.35),inset 0 0 14px rgba(255,255,255,.18)}
+.logo::before,.logo::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(125,255,230,.44);transform:rotate(-24deg) scaleY(.38)}
+.logo::after{transform:rotate(52deg) scaleY(.42);border-color:rgba(181,140,255,.38)}
+.brand-t{display:flex;flex-direction:column;gap:4px;line-height:1}
+.brand-t b{font-size:16px;letter-spacing:.13em;font-weight:650}
+.brand-t small{font-size:8px;letter-spacing:.25em;color:var(--dim);text-transform:uppercase}
+.gh{display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--line);border-radius:999px;font-size:10.5px;letter-spacing:.08em;color:var(--muted);transition:.25s;background:rgba(255,255,255,.015)}
+.gh:hover{color:var(--ink);border-color:rgba(137,255,232,.36);background:rgba(111,245,216,.06)}
+.gh svg{width:14px;height:14px;fill:currentColor}
+
+.hero{padding:74px 0 22px;max-width:850px}
+.eyebrow{display:flex;align-items:center;gap:12px;font-size:9px;letter-spacing:.26em;color:var(--mint);text-transform:uppercase;margin-bottom:21px}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--mint);opacity:.8}
+h1{margin:0;font-size:clamp(42px,7vw,86px);line-height:.98;letter-spacing:-.055em;font-weight:700}
+h1 em{font-style:normal;display:block;color:transparent;-webkit-text-stroke:1px rgba(123,255,230,.6);letter-spacing:-.04em}
+.lede{max-width:590px;margin:25px 0 0;font-size:13.5px;line-height:1.95;color:#a9c8c3;letter-spacing:.01em}
+.lede b{color:#e9fff9;font-weight:550}
+.stats{display:flex;gap:34px;margin:28px 0 0;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:4px}
+.stat b{font-family:"Cascadia Code",Consolas,monospace;font-size:25px;line-height:1;color:#effffb;font-weight:500}
+.stat b small{font-size:9px;color:var(--dim);margin-left:2px}
+.stat span{font-size:8px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+
+.cards{display:grid;grid-template-columns:1.35fr 1fr;gap:18px;margin:42px 0 0;align-items:stretch}
+.card{
+  position:relative;overflow:hidden;border:1px solid var(--line);border-radius:20px;
+  background:linear-gradient(180deg,rgba(8,29,30,.76),rgba(3,14,16,.9));
+  box-shadow:0 30px 90px rgba(0,0,0,.35);display:flex;flex-direction:column;
+  transition:transform .35s cubic-bezier(.22,.9,.24,1),border-color .3s,box-shadow .3s;
+}
+.card:hover{transform:translateY(-4px);border-color:rgba(137,255,232,.34);box-shadow:0 36px 100px rgba(0,0,0,.5),0 0 30px rgba(58,222,192,.06)}
+.card.recommended{border-color:rgba(111,245,216,.45);box-shadow:0 30px 90px rgba(0,0,0,.4),0 0 36px rgba(58,222,192,.1)}
+.shot{position:relative;overflow:hidden;background:#020a0b;border-bottom:1px solid rgba(151,255,235,.1)}
+.shot img{display:block;width:100%;height:100%;object-fit:cover;opacity:.88;transition:transform .6s cubic-bezier(.22,.9,.24,1),opacity .4s}
+.card:hover .shot img{transform:scale(1.025);opacity:1}
+.desktop .shot{aspect-ratio:16/10}
+.mobile .shot{height:315px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 35%,rgba(33,124,113,.25),#020a0b 72%)}
+.phone{
+  width:168px;height:calc(100% - 34px);border-radius:22px;overflow:hidden;
+  border:1px solid rgba(151,255,235,.28);background:#020b0c;
+  box-shadow:0 20px 45px rgba(0,0,0,.55),0 0 0 5px rgba(3,20,20,.9),0 0 0 6px rgba(137,255,232,.12);
+  position:relative;
+}
+.phone::before{content:"";position:absolute;left:50%;top:7px;width:42px;height:4px;border-radius:3px;background:rgba(186,255,243,.25);transform:translateX(-50%);z-index:2}
+.phone img{width:100%;height:100%;object-fit:cover;opacity:.9}
+.badge{
+  position:absolute;top:14px;left:14px;z-index:3;display:none;align-items:center;gap:5px;
+  padding:5px 8px;border-radius:999px;background:rgba(4,24,23,.82);border:1px solid rgba(111,245,216,.42);
+  font-size:8px;letter-spacing:.15em;color:var(--mint);backdrop-filter:blur(8px);
+}
+.card.recommended .badge{display:flex}
+.badge::before{content:"";width:4px;height:4px;border-radius:50%;background:var(--mint);box-shadow:0 0 8px var(--mint)}
+.body{padding:22px 22px 23px;display:flex;flex-direction:column;flex:1}
+.kicker{font-size:8px;letter-spacing:.22em;color:var(--dim);text-transform:uppercase;margin-bottom:9px}
+.card h2{margin:0;font-size:25px;letter-spacing:-.02em;font-weight:650}
+.card h2 span{font-size:8px;letter-spacing:.16em;color:var(--violet);font-weight:400;margin-left:7px;vertical-align:3px}
+.card p{margin:11px 0 0;font-size:11.5px;line-height:1.85;color:#9fbfba;max-width:430px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin:15px 0 0}
+.tags i{font-style:normal;padding:4px 7px;border-radius:4px;border:1px solid rgba(151,255,235,.1);font-size:8.5px;letter-spacing:.04em;color:#9fc7bf;background:rgba(255,255,255,.015)}
+.go{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-top:auto;padding-top:19px;
+}
+.go a{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;height:42px;padding:0 17px;border-radius:7px;
+  background:linear-gradient(135deg,#c4ffef,#5fe9cc 52%,#2ec6ae);color:#031a17;font-size:10px;font-weight:650;letter-spacing:.08em;
+  transition:.25s;box-shadow:0 8px 24px rgba(71,229,198,.16);
+}
+.go a:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(71,229,198,.28)}
+.go a svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.6}
+.go .alt{font-size:8.5px;letter-spacing:.08em;color:var(--dim)}
+
+.note{
+  display:flex;gap:12px;align-items:flex-start;margin:24px 0 0;padding:13px 15px;
+  border:1px solid rgba(151,255,235,.08);border-radius:9px;background:rgba(255,255,255,.012);
+  font-size:10px;line-height:1.75;color:#83a8a1;
+}
+.note b{color:#c9e9e2;font-weight:500}
+.note svg{width:14px;height:14px;flex:0 0 auto;margin-top:1px;stroke:var(--mint);fill:none;stroke-width:1.4}
+
+footer{display:flex;justify-content:space-between;gap:16px;padding:38px 0 34px;margin-top:26px;border-top:1px solid rgba(151,255,235,.08);font-size:8.5px;letter-spacing:.1em;color:var(--dim);flex-wrap:wrap}
+footer b{color:#93bbb4;font-weight:400}
+@media (max-width:900px){
+  .wrap{width:calc(100% - 28px)}
+  header{padding-top:18px}
+  .brand-t b{font-size:14px}
+  .gh{padding:8px 10px;font-size:9px}
+  .hero{padding:48px 0 8px}
+  .lede{font-size:12.5px;line-height:1.85}
+  .cards{grid-template-columns:1fr;gap:13px;margin-top:28px}
+  .desktop .shot{aspect-ratio:16/10}
+  .mobile .shot{height:330px}
+  .card h2{font-size:23px}
+  .stats{gap:24px}
+  .stat b{font-size:22px}
+  footer{padding:25px 0 25px}
+}
+@media (max-width:520px){
+  h1{font-size:41px}
+  .eyebrow{font-size:8px;letter-spacing:.18em}
+  .lede{font-size:12px}
+  .gh span{display:none}
+  .gh{padding:9px;border-radius:50%}
+  .card p{font-size:11px}
+  .mobile .shot{height:300px}
+  .phone{width:150px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bg"><span class="orb a"></span><span class="orb b"></span><span class="orb c"></span></div>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div class="brand-t"><b>细胞内部漫游</b><small>INSIDE THE CELL / 3D ATLAS</small></div>
+    </div>
+    <a class="gh" href="https://github.com/tim261004/cell" target="_blank" rel="noopener" aria-label="GitHub 仓库">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .7a11.3 11.3 0 0 0-3.57 22c.57.1.78-.25.78-.55v-2.1c-3.18.7-3.85-1.35-3.85-1.35-.52-1.33-1.27-1.68-1.27-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.75 1.18 1.75 1.18 1.02 1.75 2.68 1.24 3.33.95.1-.74.4-1.24.73-1.53-2.54-.29-5.21-1.27-5.21-5.66 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.45.11-3.02 0 0 .96-.31 3.14 1.17a10.9 10.9 0 0 1 5.72 0c2.18-1.48 3.14-1.17 3.14-1.17.62 1.57.23 2.73.11 3.02.73.8 1.18 1.82 1.18 3.07 0 4.4-2.67 5.37-5.22 5.65.41.36.78 1.06.78 2.14v3.17c0 .3.2.66.79.55A11.3 11.3 0 0 0 12 .7Z"/></svg>
+      <span>GitHub 仓库</span>
+    </a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">高中生物 · 必修1 · 第3章</div>
+      <h1>把细胞<em>放进浏览器。</em></h1>
+      <p class="lede">一座由膜、蛋白质和无数化学反应构成的微观城市。现在，它可以直接在网页里打开：<b>环绕观察、进入细胞内部、点击任意结构查看知识点。</b>无需安装，电脑和手机都有适合的版本。</p>
+      <div class="stats">
+        <div class="stat"><b>15<small>+</small></b><span>细胞结构</span></div>
+        <div class="stat"><b>08</b><span>胞内物质</span></div>
+        <div class="stat"><b>01</b><span>可漫游细胞</span></div>
+        <div class="stat"><b>3D</b><span>实时渲染</span></div>
+      </div>
+    </section>
+
+    <section class="cards" aria-label="选择版本">
+      <article class="card desktop" id="desktopCard">
+        <div class="badge">推荐 · 电脑</div>
+        <div class="shot"><img src="preview-desktop.jpg" alt="桌面版细胞内部漫游预览" loading="eager"></div>
+        <div class="body">
+          <div class="kicker">DESKTOP / 大屏观察</div>
+          <h2>桌面版 <span>DESKTOP</span></h2>
+          <p>鼠标拖拽环绕、滚轮靠近、WASD 进入细胞内部漫游。大屏下更容易观察核孔、线粒体嵴、类囊体等细节。</p>
+          <div class="tags"><i>鼠标环绕</i><i>滚轮缩放</i><i>WASD 漫游</i><i>知识卡</i></div>
+          <div class="go">
+            <a href="desktop.html">打开桌面版
+              <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <span class="alt">横屏 / 电脑</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card mobile" id="mobileCard">
+        <div class="badge">推荐 · 手机</div>
+        <div class="shot"><div class="phone"><img src="preview-mobile.jpg" alt="手机版细胞内部漫游预览" loading="eager"></div></div>
+        <div class="body">
+          <div class="kicker">MOBILE / 触控漫游</div>
+          <h2>手机版 <span>MOBILE</span></h2>
+          <p>单指旋转、双指缩放、轻点查看；左下虚拟摇杆在细胞内部移动。为竖屏、小屏和触控重新排布了界面。</p>
+          <div class="tags"><i>单指旋转</i><i>双指缩放</i><i>虚拟摇杆</i><i>底部知识卡</i></div>
+          <div class="go">
+            <a href="mobile.html">打开手机版
+              <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <span class="alt">竖屏 / 触控</span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <div class="note">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7.2v.2"/></svg>
+      <div><b>怎么选？</b> 电脑用「桌面版」；手机用「手机版」。两个版本内容一致，只是镜头、布局和操作方式不同。首次进入需要生成 3D 场景，加载 2–4 秒属正常。教学示意模型，细胞器大小与数量经过艺术化处理。</div>
+    </div>
+  </main>
+
+  <footer>
+    <div>人教版 高中生物学 必修1 · 第3章《细胞的基本结构》</div>
+    <div>STATIC 3D · <b>NO PLUGIN REQUIRED</b></div>
+  </footer>
+</div>
+<script>
+(function(){
+  var ua=navigator.userAgent||"";
+  var touch=matchMedia("(pointer: coarse)").matches;
+  var small=innerWidth<760;
+  var mobile=/Android|iPhone|iPad|iPod|Mobile/i.test(ua)||touch||small;
+  document.getElementById(mobile?"mobileCard":"desktopCard").classList.add("recommended");
+})();
+</script>
+</body>
+</html>
